@@ -77,6 +77,8 @@ boolean dataLoaded=false;
                  if (dataLoaded==true)
                  {
                       System.out.println("Action called!\n Create New Invoice Header. ");
+                       System.out.println("Action called!\n Create New Invoice Header. ");
+
                 callNewAddInvoicePopup();
                  }
                  else
