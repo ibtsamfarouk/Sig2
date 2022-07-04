@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +72,7 @@ boolean dataLoaded=false;
                 { System.out.println("Action called!\n Save file. ");
                   saveFiles();}
                 else 
-                JOptionPane.showMessageDialog(frame, "Load data first first.");
+                JOptionPane.showMessageDialog(frame, "Load data first.");
                 
                 break;
                 
@@ -77,12 +80,11 @@ boolean dataLoaded=false;
                  if (dataLoaded==true)
                  {
                       System.out.println("Action called!\n Create New Invoice Header. ");
-                       System.out.println("Action called!\n Create New Invoice Header. ");
 
                 callNewAddInvoicePopup();
                  }
                  else
-                      JOptionPane.showMessageDialog(frame, "Load data first first.");
+                      JOptionPane.showMessageDialog(frame, "Load data first.");
                 break;
             case "Delete Invoice":
                  if (dataLoaded==true)
@@ -146,17 +148,38 @@ boolean dataLoaded=false;
                  }
                 break;
             case "OKFromAddInvocePopup":
-                int Id =1+getLastInvoiceId();
+              
                 String date=addInvoicePopupFrame.invoiceDatetxt.getText();
+               if( isValidDate(date)==false)
+               { 
+                   addInvoicePopupFrame.validatedatelbl.setText("The date format should be \"DD-MM-YYYY\" ");
+               }
+               else{ 
+                int Id =1+getLastInvoiceId();
                 String customerName= addInvoicePopupFrame.invoiceCustomertxt.getText();
                 InvoiceHeader newInvoceHeader=new InvoiceHeader(Id, customerName, date);
                 addInvoicePopupFrame.dispose();
                 System.out.println(newInvoceHeader);
                 addInvoice2(newInvoceHeader);
+                addInvoicePopupFrame.validatedatelbl.setText("");
+                addInvoicePopupFrame.invoiceDatetxt.setText("");
+                addInvoicePopupFrame.invoiceCustomertxt.setText("");
                 break;
-                
+               }
         }
         
+    }
+    
+    public boolean isValidDate(String dateStr) {
+        String dateFormat = "dd-MM-yyyy";
+        DateFormat sdf = new SimpleDateFormat(dateFormat);
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -234,6 +257,9 @@ boolean dataLoaded=false;
         addInvoicePopupFrame.setVisible(true);
         addInvoicePopupFrame.pack();
         addInvoicePopupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addInvoicePopupFrame.validatedatelbl.setText("");
+        addInvoicePopupFrame.invoiceDatetxt.setText("");
+        addInvoicePopupFrame.invoiceCustomertxt.setText("");
         addInvoicePopupFrame.addInvoiceHeaderbtn.addActionListener(this);
 
     }
@@ -281,6 +307,7 @@ boolean dataLoaded=false;
         addLinePopupFrame.setVisible(true);
         addLinePopupFrame.pack();
         addLinePopupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+         
         addLinePopupFrame.addItembtn.addActionListener(this);
      
     }

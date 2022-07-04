@@ -9,6 +9,7 @@ import controller.Controller;
 import model.InvoiceLine;
 
 
+
 public class AddLineFrame extends javax.swing.JFrame {
     //private Controller controller;
            // private Controller controller;
