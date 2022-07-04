@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 public class InvoiceLineTableModel extends AbstractTableModel {
 
     private ArrayList<InvoiceLine> data;
-    private String[] cols = {"Item Name", " Price", "Count"};
+    private String[] cols = {"InvoiceID","Item Name", " Price", "Count","Total"};
 
     public InvoiceLineTableModel(ArrayList<InvoiceLine> data) {
         this.data = data;
@@ -49,11 +49,15 @@ public class InvoiceLineTableModel extends AbstractTableModel {
         InvoiceLine line = data.get(rowIndex);
         switch(columnIndex) {
             case 0:
-                return line.getItemName();
+                return line.getHeader().getId();
             case 1:
-                return line.getUnitPrice();
+                return line.getItemName();
             case 2:
+                return line.getUnitPrice();
+            case 3:
                 return line.getCount();
+            case 4:
+                return line.getLineTotal();
         }
         return "";
     }
