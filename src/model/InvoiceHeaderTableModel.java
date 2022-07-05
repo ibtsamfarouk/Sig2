@@ -36,9 +36,13 @@ public class InvoiceHeaderTableModel extends AbstractTableModel {
         return cols.length;
     }
 public void addLinedown (InvoiceLine lineData,int index) {
-        data.get(index).addLine(lineData);
+        this.data.get(index).addLine(lineData);
+             //  data.get(index).getLines().add(lineData);
+           //    for(int i=0;i<data.size();i++)
+                   
+
        // fireTableRowsInserted(data.size()+1, data.size()+1);       
-       fireTableDataChanged();
+        fireTableDataChanged();
 }
 
 
@@ -88,20 +92,29 @@ public ArrayList<InvoiceLine> getLines (int index) {
     
     
     public void deleteInvoice(int rowIndex) {
-        if (this.data.remove(this.data.get(rowIndex))) {
+       /* if (this.data.remove(this.data.get(rowIndex))) {
+            fireTableRowsDeleted(rowIndex, rowIndex);
+        }*/
+        if (data.remove(data.get(rowIndex))) {
             fireTableRowsDeleted(rowIndex, rowIndex);
         }
     }
    
-    /*public void deleteLine(int rowIndex) {
-       if (this.data.remove(this.data.get(rowIndex))) {
-           for(int i=0;i<data.size();i++)
-               this .data.get(i).getLines().get(rowIndex)
-           
-      //  if(this.data.remove(this.data.get(rowIndex).getLines().get(rowIndex))){
+    public void deleteLine(int linerowIndex,int headerRowIndex) {
+        
+          System.out.println("line rowIndex  "+linerowIndex);
+          System.out.println("header rowIndex  "+headerRowIndex);
+
+          System.out.println("The deleted line is "+data.get(headerRowIndex).getLines().get(linerowIndex));
+
+              
+                data.get(headerRowIndex).removeLine(data.get(headerRowIndex).getLines().get(linerowIndex));
+
+               // fireTableDataChanged();
+
             
-            fireTableRowsDeleted(rowIndex, rowIndex);
+           fireTableRowsDeleted(headerRowIndex, headerRowIndex);
         }
-    }*/
+    
     
 }

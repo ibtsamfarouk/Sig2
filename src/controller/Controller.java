@@ -43,16 +43,13 @@ public class Controller implements ActionListener, ListSelectionListener {
    // private AddLineFrame addFrame;
       AddLineFrame addLinePopupFrame =new AddLineFrame();
       AddInvoiceFrame addInvoicePopupFrame =new AddInvoiceFrame();
-boolean dataLoaded=false;
+      boolean dataLoaded=false;
+      int rowIndex;
     
      
     public Controller(Frame frame) {
         this.frame = frame;
     }
-
-    
-    
-    
 
     public Controller() {
        
@@ -105,28 +102,28 @@ boolean dataLoaded=false;
                     {if (frame.getInvHeaderTable().getSelectedRow()<0)
                      JOptionPane.showMessageDialog(frame, "Select the parent header first.");
                     else if( frame.getInvHeaderTable().getSelectedRow()>=0)
-                    {  
+                    {    rowIndex=frame.getInvHeaderTable().getSelectedRow();
                          System.out.println("Action called!\n Create New Line.");
                          callNewAddLinePopup();
                     }
              }
                 else
-                      JOptionPane.showMessageDialog(frame, "Load data first first.");
+                      JOptionPane.showMessageDialog(frame, "Load data first.");
                 break;
-           /* case "Delete Line":
+           case "Delete Line":
                  if (dataLoaded==true)
-                 {if (frame.getInvLineTable().getSelectedRow()<0)
-                     JOptionPane.showMessageDialog(frame, "Select the Line row that you want to delete it.");
+                 {if (frame.getInvHeaderTable().getSelectedRow()<0||frame.getInvLineTable().getSelectedRow()<0)
+                     JOptionPane.showMessageDialog(frame, "Select the parent Invoice row then select the Line row that you want to delete it.");
                 
                 else if( frame.getInvLineTable().getSelectedRow()>=0)
                 {
                      System.out.println("Action called!\n Delete Line ");
-                    deleteLine(frame.getInvLineTable().getSelectedRow());
+                    deleteLine(frame.getInvLineTable().getSelectedRow(),frame.getInvHeaderTable().getSelectedRow());
                 }
                  }
                   else
-                      JOptionPane.showMessageDialog(frame, "Load data first first.");
-                break;*/
+                      JOptionPane.showMessageDialog(frame, "Load data first.");
+                break;
                 
             case "Add" :
                 
@@ -140,7 +137,10 @@ boolean dataLoaded=false;
                 int count =Integer.parseInt(addLinePopupFrame.addCounttxt.getText());
                 double price =Integer.parseInt(addLinePopupFrame.addItemPricetxt.getText());
                 addLinePopupFrame.dispose();
-                InvoiceLine invoiceline =new InvoiceLine(name, price, count,null);
+               // InvoiceLine invoiceline =new InvoiceLine(name, price, count,null);
+             
+              //  InvoiceLine invoiceline =new InvoiceLine(name, price, count,frame.getInvoiceHeadersList().get(frame.getInvHeaderTable().getSelectedRow()));
+                InvoiceLine invoiceline =new InvoiceLine(name, price, count,frame.getInvoiceHeadersList().get(rowIndex));
                 System.out.println(invoiceline);
                 
                 addItemline2(invoiceline);
@@ -188,10 +188,18 @@ boolean dataLoaded=false;
         //System.out.println("selectedRow first is  "+selectedRow);
         if(selectedRow<0)
             selectedRow=0;
-        ArrayList<InvoiceLine> lines = frame.getInvoiceHeadersList().get(selectedRow).getLines();
+        // ArrayList<InvoiceLine> lines =new ArrayList<>();
+       // System.out.println("array =" +frame.getInvoiceHeadersList());
+          //System.out.println("size=  "+frame.getInvoiceHeadersList().size());
+          if (frame.getInvoiceHeadersList().size()!=0)
+          {    ArrayList<InvoiceLine> lines = frame.getInvoiceHeadersList().get(selectedRow).getLines();
         //frame.getInvHeaderTable().clearSelection();
         frame.getInvLineTable().setModel(new InvoiceLineTableModel(lines));
-        
+          }
+          else {
+              ArrayList<InvoiceLine> nolines=new ArrayList<>();
+              frame.getInvLineTable().setModel(new InvoiceLineTableModel(nolines));
+                      }
     }
 
     private void loadFiles() {
@@ -313,28 +321,28 @@ boolean dataLoaded=false;
     }
 
         public void addItemline2(InvoiceLine line){
-     int selectedRow = frame.getInvHeaderTable().getSelectedRow();
-     
-     frame.adddd(selectedRow,line);
+        //int selectedRow = frame.getInvHeaderTable().getSelectedRow();
+        frame.adddd(rowIndex,line);
         }
-    public void addItemline(InvoiceLine line){
+        
+      // public void addItemline(InvoiceLine line){
        // frame.addLineList(line);
-       int selectedRow = frame.getInvHeaderTable().getSelectedRow();
+     //  int selectedRow = frame.getInvHeaderTable().getSelectedRow();
        /*if(selectedRow==-1)
         selectedRow=0;*/
       // System.out.println("selectedRow in addline is  "+selectedRow);
        
       //  frame.getInvoiceHeadersList().get(selectedRow).addLine(line);
       
-          ArrayList<InvoiceLine> cLines= new ArrayList<>();
-          cLines=frame.fgetLines(selectedRow);
-          cLines.add(line);
-          frame.getInvLineTable().setModel(new InvoiceLineTableModel(cLines));
+       //   ArrayList<InvoiceLine> cLines= new ArrayList<>();
+       //   cLines=frame.fgetLines(selectedRow);
+       //   cLines.add(line);
+       //   frame.getInvLineTable().setModel(new InvoiceLineTableModel(cLines));
          //ArrayList<InvoiceHeader> invoiceHeadersList= new ArrayList<>();
        // invoiceHeadersList=frame.getInvoiceHeadersList();
         // frame.setInvoiceHeadersList(invoiceHeadersList);
          
-    }
+   // }
     
     public void addInvoice(InvoiceHeader invoiceHeader){
        
@@ -361,17 +369,22 @@ boolean dataLoaded=false;
 
     }
     
-    /*public void deleteLine(int selectedRow) {
-        frame.fdeleteLineRow(selectedRow);
-    }*/
+    public void deleteLine (int lineSelectedRow,int headerSelectedRow) {
+        frame.fdeleteLineRow(lineSelectedRow,headerSelectedRow);
+    }
     
      public int getLastInvoiceId(){
+         int lastId;
        ArrayList<InvoiceHeader> invoiceHeadersList= new ArrayList<>();
          invoiceHeadersList=frame.getInvoiceHeadersList();
         // for(int i=0;i<invoiceHeadersList.size();i++)
              int size =invoiceHeadersList.size();
-             int lastId=invoiceHeadersList.get(size-1).getId();
-             System.out.println("last id is  "+lastId);
+             if(size==0)
+                 lastId=0;
+             else{
+             lastId=invoiceHeadersList.get(size-1).getId();
+             //System.out.println("last id is  "+lastId);
+             }
            return lastId;
        }
 

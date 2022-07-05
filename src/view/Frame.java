@@ -291,10 +291,7 @@ public class Frame extends javax.swing.JFrame {
         this.invoiceHeadersList = invoiceHeadersList;
         headerTableModel = new InvoiceHeaderTableModel(invoiceHeadersList);
          this.invHeaderTable.setModel(headerTableModel);
-       /*  invoiceIDlbl.setText(headerTableModel.getValueAt(invHeaderTable.getSelectedRow(), 0).toString());
-        invoiceDatelbl.setText(headerTableModel.getValueAt(invHeaderTable.getSelectedRow(), 1).toString());
-        customerNamelbl.setText(headerTableModel.getValueAt(invHeaderTable.getSelectedRow(), 2).toString());
-        invoiceTotallbl.setText(headerTableModel.getValueAt(invHeaderTable.getSelectedRow(), 3).toString());*/
+       
     }
 
     
@@ -394,17 +391,17 @@ public class Frame extends javax.swing.JFrame {
     }
     
     
-    /*public void fdeleteLineRow(int selectedRow) {
+    public void fdeleteLineRow(int lineSelectedRow,int headerSelectedRow) {
         
         //lineTableModel.deleteLine(selectedRow);
-                headerTableModel.deleteLine(selectedRow);
+         headerTableModel.deleteLine(lineSelectedRow,headerSelectedRow);
 
-    }*/
+    }
     
 
     public void adddd(int selectedRow, InvoiceLine line) {
         
-        headerTableModel.addLinedown(line, selectedRow);
+       this.headerTableModel.addLinedown(line, selectedRow);
     }
 
     public void addNewInvoiceHeader(InvoiceHeader invoiceHeader) {
